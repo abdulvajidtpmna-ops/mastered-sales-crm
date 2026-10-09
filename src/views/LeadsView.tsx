@@ -123,43 +123,43 @@ export const LeadsView: React.FC<LeadsViewProps> = ({
       // Search
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
-        const matchesName = (lead.name || '').toLowerCase().includes(q);
-        const matchesPhone = (lead.phone || '').toLowerCase().includes(q);
-        const matchesCourse = (lead.course || '').toLowerCase().includes(q);
-        const matchesLocation = (lead.location || '').toLowerCase().includes(q);
-        const matchesSalesperson = (lead.assignedSalespersonName || '').toLowerCase().includes(q);
+        const matchesName = String(lead.name || '').toLowerCase().includes(q);
+        const matchesPhone = String(lead.phone || '').toLowerCase().includes(q);
+        const matchesCourse = String(lead.course || '').toLowerCase().includes(q);
+        const matchesLocation = String(lead.location || '').toLowerCase().includes(q);
+        const matchesSalesperson = String(lead.assignedSalespersonName || '').toLowerCase().includes(q);
         if (!matchesName && !matchesPhone && !matchesCourse && !matchesLocation && !matchesSalesperson) {
           return false;
         }
       }
 
       // Course Filter
-      if (filters.course && lead.course !== filters.course) {
+      if (filters.course && String(lead.course || '') !== filters.course) {
         return false;
       }
 
       // Temperature Filter
-      if (filters.temperature && (lead.temperature || '').toUpperCase() !== filters.temperature.toUpperCase()) {
+      if (filters.temperature && String(lead.temperature || '').toUpperCase() !== filters.temperature.toUpperCase()) {
         return false;
       }
 
       // Status Filter
-      if (filters.status && lead.status !== filters.status) {
+      if (filters.status && String(lead.status || '') !== filters.status) {
         return false;
       }
 
       // Priority Filter
-      if (filters.priorityTier && !(lead.priorityTier || '').toUpperCase().includes(filters.priorityTier.toUpperCase())) {
+      if (filters.priorityTier && !String(lead.priorityTier || '').toUpperCase().includes(filters.priorityTier.toUpperCase())) {
         return false;
       }
 
       // Lead Source Filter
-      if (filters.leadSource && lead.leadSource !== filters.leadSource) {
+      if (filters.leadSource && String(lead.leadSource || '') !== filters.leadSource) {
         return false;
       }
 
       // Salesperson Filter
-      if (filters.salespersonId && lead.assignedSalespersonId !== filters.salespersonId) {
+      if (filters.salespersonId && String(lead.assignedSalespersonId || '') !== filters.salespersonId) {
         return false;
       }
 
@@ -168,7 +168,7 @@ export const LeadsView: React.FC<LeadsViewProps> = ({
   }, [leads, searchQuery, filters]);
 
   const existingPhoneNumbers = useMemo(() => {
-    return leads.map((l) => (l.phone || '').replace(/[^0-9+]/g, ''));
+    return leads.map((l) => String(l.phone || '').replace(/[^0-9+]/g, ''));
   }, [leads]);
 
   return (

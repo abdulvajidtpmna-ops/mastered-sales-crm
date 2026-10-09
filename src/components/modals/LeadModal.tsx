@@ -45,18 +45,18 @@ export const LeadModal: React.FC<LeadModalProps> = ({
 
   useEffect(() => {
     if (lead) {
-      setName(lead.name || '');
-      setPhone(lead.phone || '');
-      setWhatsapp(lead.whatsapp || lead.phone || '');
-      setSameAsPhone(lead.whatsapp === lead.phone || !lead.whatsapp);
-      setLocation(lead.location || '');
-      setLeadSource(lead.leadSource || 'Meta Ads');
-      setCourse(lead.course || 'HRCA');
+      setName(String(lead.name || ''));
+      setPhone(String(lead.phone || ''));
+      setWhatsapp(String(lead.whatsapp || lead.phone || ''));
+      setSameAsPhone(String(lead.whatsapp || '') === String(lead.phone || '') || !lead.whatsapp);
+      setLocation(String(lead.location || ''));
+      setLeadSource(String(lead.leadSource || 'Meta Ads'));
+      setCourse(String(lead.course || 'HRCA'));
       setTemperature(lead.temperature || 'WARM');
-      setStatus(lead.status || 'New');
-      setInterestLevel(lead.interestLevel || 'Moderate');
-      setObjection(lead.objection || 'None');
-      setRemark(lead.remark || '');
+      setStatus(String(lead.status || 'New'));
+      setInterestLevel(String(lead.interestLevel || 'Moderate'));
+      setObjection(String(lead.objection || 'None'));
+      setRemark(String(lead.remark || ''));
       setNextFollowUpAt(
         lead.nextFollowUpAt ? new Date(lead.nextFollowUpAt).toISOString().slice(0, 16) : ''
       );

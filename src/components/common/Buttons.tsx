@@ -16,7 +16,7 @@ export const CallButton: React.FC<CallButtonProps> = ({
   className = '',
   size = 'md',
 }) => {
-  const cleanPhone = (phone || '').replace(/[^0-9+]/g, '');
+  const cleanPhone = String(phone || '').replace(/[^0-9+]/g, '');
 
   const sizeClasses = {
     sm: 'px-2.5 py-1 text-xs gap-1',
@@ -86,7 +86,7 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
         if (onOpened) onOpened();
       } else {
         // Fallback to wa.me if backend message indicates standard url
-        const cleanNumber = phone.replace(/[^0-9]/g, '');
+        const cleanNumber = String(phone || '').replace(/[^0-9]/g, '');
         const fallbackUrl = `https://wa.me/${cleanNumber}`;
         window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
         if (res.message) {
