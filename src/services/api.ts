@@ -12,7 +12,7 @@ import type {
   WhatsAppActivitySummary,
 } from '../types';
 
-const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbyLUXWJR3y6H1rOnn4O5oetL_O_jExzNHnE2p_9Kf3TfMu87Tx9DnKP7Kh_axhXW3bFBg/exec';
+const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbwCXVQ3RghjhWqGig829T-7AR-UrPTnsXnYuOivQbauZvD1jB5bBCmAwPqSXUKpIh_gJw/exec';
 
 // Single source of truth session key in localStorage
 export const SESSION_STORAGE_KEY = 'msa_session';
