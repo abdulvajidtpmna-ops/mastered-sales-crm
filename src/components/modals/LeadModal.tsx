@@ -44,6 +44,8 @@ export const LeadModal: React.FC<LeadModalProps> = ({
   const [nextFollowUpAt, setNextFollowUpAt] = useState('');
 
   useEffect(() => {
+    if (!isOpen) return;
+
     if (lead) {
       setName(String(lead.name || ''));
       setPhone(String(lead.phone || ''));
@@ -68,7 +70,7 @@ export const LeadModal: React.FC<LeadModalProps> = ({
       setSameAsPhone(true);
       setLocation('');
       setLeadSource('Meta Ads');
-      setCourse(courses[0]?.code || 'HRCA');
+      setCourse(courses?.[0]?.code || 'HRCA');
       setTemperature('WARM');
       setStatus('New');
       setInterestLevel('Interested');
@@ -80,7 +82,7 @@ export const LeadModal: React.FC<LeadModalProps> = ({
       tomorrow.setHours(10, 0, 0, 0);
       setNextFollowUpAt(tomorrow.toISOString().slice(0, 16));
     }
-  }, [lead, courses, isOpen]);
+  }, [lead, isOpen]);
 
   if (!isOpen) return null;
 
