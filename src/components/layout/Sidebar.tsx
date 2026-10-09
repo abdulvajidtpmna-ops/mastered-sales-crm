@@ -76,12 +76,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Brand Header */}
         <div>
           <div className="p-5 border-b border-[#0B3A66]/60">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-lg bg-[#C9A227] flex items-center justify-center text-[#072A4A] font-extrabold text-lg shadow-md">
-                M
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl overflow-hidden shadow-md shrink-0 border border-blue-400/30">
+                <img src="/logo.png" alt="Mastered Logo" className="w-full h-full object-cover" />
               </div>
               <div>
-                <div className="text-xs font-semibold tracking-wider text-[#E7D58A] uppercase">
+                <div className="text-[11px] font-semibold tracking-wider text-[#E7D58A] uppercase">
                   Mastered Skill Academy
                 </div>
                 <div className="text-base font-extrabold text-white tracking-tight leading-none mt-0.5">

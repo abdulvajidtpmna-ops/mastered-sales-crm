@@ -1,0 +1,26 @@
+{
+  "name": "MASTERED CRM - Mastered Skill Academy",
+  "short_name": "Mastered CRM",
+  "description": "Mastered Skill Academy CRM & Sales Performance System",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "background_color": "#072A4A",
+  "theme_color": "#0B3A66",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity", "education"]
+}

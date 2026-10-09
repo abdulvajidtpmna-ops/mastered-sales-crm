@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Mastered CRM</string>
+    <string name="title_activity_main">Mastered CRM</string>
+    <string name="package_name">com.masteredskillacademy.crm</string>
+    <string name="custom_url_scheme">com.masteredskillacademy.crm</string>
+</resources>

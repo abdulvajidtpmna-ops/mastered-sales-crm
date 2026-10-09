@@ -28,8 +28,8 @@ export const LoginView: React.FC = () => {
       <div className="w-full max-w-md relative z-10">
         {/* Brand Logo & Name */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#C9A227] text-[#072A4A] font-black text-3xl shadow-xl mb-3 border-2 border-[#E7D58A]">
-            M
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl overflow-hidden shadow-xl mb-3 border-2 border-[#0B3A66]">
+            <img src="/logo.png" alt="Mastered Skill Academy Logo" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-2xl font-black tracking-tight text-white">
             MASTERED CRM

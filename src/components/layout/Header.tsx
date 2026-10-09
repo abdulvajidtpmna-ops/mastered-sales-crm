@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Menu, UserPlus, RefreshCw } from 'lucide-react';
+import { Menu, UserPlus, RefreshCw, Download } from 'lucide-react';
 
 interface HeaderProps {
   onToggleSidebar?: () => void;
@@ -16,6 +16,31 @@ export const Header: React.FC<HeaderProps> = ({
   isRefreshing = false,
 }) => {
   const { user, isChairman } = useAuth();
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) {
+      alert('To install on iOS/Safari: tap "Share" and select "Add to Home Screen". On Android/Chrome: tap browser menu (3 dots) and select "Install app".');
+      return;
+    }
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setDeferredPrompt(null);
+    }
+  };
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -40,28 +65,43 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         )}
 
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#0B3A66]">
-              MASTERED CRM
-            </span>
-            <span
-              className={`text-[10px] font-bold px-1.5 py-0.2 rounded uppercase ${
-                isChairman
-                  ? 'bg-[#C9A227]/20 text-amber-900 border border-[#C9A227]/40'
-                  : 'bg-blue-100 text-[#0B3A66] border border-blue-200'
-              }`}
-            >
-              {isChairman ? 'CHAIRMAN' : 'SALES REP'}
-            </span>
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 border border-slate-200">
+            <img src="/logo.png" alt="Mastered Logo" className="w-full h-full object-cover" />
           </div>
-          <h2 className="text-sm sm:text-base font-bold text-slate-900 leading-tight">
-            {getGreeting()}, <span className="text-[#0B3A66]">{firstName}</span>
-          </h2>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#0B3A66]">
+                MASTERED CRM
+              </span>
+              <span
+                className={`text-[10px] font-bold px-1.5 py-0.2 rounded uppercase ${
+                  isChairman
+                    ? 'bg-[#C9A227]/20 text-amber-900 border border-[#C9A227]/40'
+                    : 'bg-blue-100 text-[#0B3A66] border border-blue-200'
+                }`}
+              >
+                {isChairman ? 'CHAIRMAN' : 'SALES REP'}
+              </span>
+            </div>
+            <h2 className="text-sm sm:text-base font-bold text-slate-900 leading-tight">
+              {getGreeting()}, <span className="text-[#0B3A66]">{firstName}</span>
+            </h2>
+          </div>
         </div>
       </div>
 
       <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={handleInstallClick}
+          title="Install CRM App on your device"
+          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-[#0B3A66] bg-blue-50 hover:bg-blue-100 rounded-md border border-blue-200 transition-colors cursor-pointer"
+        >
+          <Download className="w-3.5 h-3.5 text-[#C9A227]" />
+          <span className="hidden sm:inline">Install App</span>
+        </button>
+
         {onRefresh && (
           <button
             type="button"
