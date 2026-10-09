@@ -32,6 +32,11 @@ export type LeadStatus =
   | 'INVALID';
 
 export type InterestLevel =
+  | 'Highly Interested'
+  | 'Interested'
+  | 'Moderately Interested'
+  | 'Less Interested'
+  | 'Not Interested'
   | 'Very High'
   | 'High'
   | 'Moderate'

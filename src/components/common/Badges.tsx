@@ -130,7 +130,7 @@ export const StatusBadge: React.FC<{ status?: LeadStatus | string; size?: 'sm' |
 };
 
 export const InterestBadge: React.FC<{ interest?: InterestLevel | string; size?: 'sm' | 'md' }> = ({
-  interest = 'Moderate',
+  interest = 'Interested',
   size = 'md',
 }) => {
   const i = (interest || '').toString().toUpperCase();
@@ -138,14 +138,16 @@ export const InterestBadge: React.FC<{ interest?: InterestLevel | string; size?:
 
   let cls = 'bg-slate-100 text-slate-700 border-slate-200';
 
-  if (i.includes('VERY_HIGH') || i.includes('VERY HIGH')) {
+  if (i.includes('HIGHLY') || i.includes('VERY_HIGH') || i.includes('VERY HIGH')) {
     cls = 'bg-emerald-50 text-emerald-700 border-emerald-200 font-semibold';
-  } else if (i.includes('HIGH')) {
+  } else if (i === 'INTERESTED' || i.includes('HIGH')) {
     cls = 'bg-teal-50 text-teal-700 border-teal-200 font-medium';
-  } else if (i.includes('MODERATE')) {
+  } else if (i.includes('MODERAT')) {
     cls = 'bg-blue-50 text-blue-700 border-blue-200';
-  } else if (i.includes('LOW')) {
-    cls = 'bg-slate-50 text-slate-600 border-slate-200';
+  } else if (i.includes('LESS') || i.includes('LOW')) {
+    cls = 'bg-amber-50 text-amber-700 border-amber-200';
+  } else if (i.includes('NOT') || i.includes('COLD')) {
+    cls = 'bg-rose-50 text-rose-700 border-rose-200';
   }
 
   return (

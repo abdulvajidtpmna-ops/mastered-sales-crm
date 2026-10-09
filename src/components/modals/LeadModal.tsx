@@ -38,7 +38,7 @@ export const LeadModal: React.FC<LeadModalProps> = ({
   const [course, setCourse] = useState('HRCA');
   const [temperature, setTemperature] = useState('WARM');
   const [status, setStatus] = useState('New');
-  const [interestLevel, setInterestLevel] = useState('Moderate');
+  const [interestLevel, setInterestLevel] = useState('Interested');
   const [objection, setObjection] = useState('None');
   const [remark, setRemark] = useState('');
   const [nextFollowUpAt, setNextFollowUpAt] = useState('');
@@ -54,7 +54,7 @@ export const LeadModal: React.FC<LeadModalProps> = ({
       setCourse(String(lead.course || 'HRCA'));
       setTemperature(lead.temperature || 'WARM');
       setStatus(String(lead.status || 'New'));
-      setInterestLevel(String(lead.interestLevel || 'Moderate'));
+      setInterestLevel(String(lead.interestLevel || 'Interested'));
       setObjection(String(lead.objection || 'None'));
       setRemark(String(lead.remark || ''));
       setNextFollowUpAt(
@@ -71,7 +71,7 @@ export const LeadModal: React.FC<LeadModalProps> = ({
       setCourse(courses[0]?.code || 'HRCA');
       setTemperature('WARM');
       setStatus('New');
-      setInterestLevel('Moderate');
+      setInterestLevel('Interested');
       setObjection('None');
       setRemark('');
 
@@ -349,10 +349,11 @@ export const LeadModal: React.FC<LeadModalProps> = ({
                 onChange={(e) => setInterestLevel(e.target.value)}
                 className="w-full text-xs bg-slate-50 border border-slate-300 rounded-md px-2 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0B3A66]"
               >
-                <option value="Very High">Very High</option>
-                <option value="High">High</option>
-                <option value="Moderate">Moderate</option>
-                <option value="Low">Low</option>
+                <option value="Highly Interested">Highly Interested</option>
+                <option value="Interested">Interested</option>
+                <option value="Moderately Interested">Moderately Interested</option>
+                <option value="Less Interested">Less Interested</option>
+                <option value="Not Interested">Not Interested</option>
               </select>
             </div>
           </div>

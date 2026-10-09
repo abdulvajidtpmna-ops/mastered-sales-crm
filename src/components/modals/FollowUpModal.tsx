@@ -24,7 +24,7 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
 
   const [result, setResult] = useState<string>('Interested');
   const [temperature, setTemperature] = useState<string>('WARM');
-  const [interestLevel, setInterestLevel] = useState<string>('High');
+  const [interestLevel, setInterestLevel] = useState<string>('Interested');
   const [objection, setObjection] = useState<string>('None');
   const [remark, setRemark] = useState<string>('');
 
@@ -118,16 +118,19 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
                 setResult(val);
                 if (val === 'Admitted') {
                   setTemperature('HOT');
-                  setInterestLevel('Very High');
+                  setInterestLevel('Highly Interested');
                 } else if (val === 'More Interested') {
                   setTemperature('HOT');
-                  setInterestLevel('Very High');
+                  setInterestLevel('Highly Interested');
+                } else if (val === 'Interested') {
+                  setTemperature('WARM');
+                  setInterestLevel('Interested');
                 } else if (val === 'Less Interested') {
                   setTemperature('COLD');
-                  setInterestLevel('Low');
+                  setInterestLevel('Less Interested');
                 } else if (val === 'Not Interested') {
                   setTemperature('COLD');
-                  setInterestLevel('Low');
+                  setInterestLevel('Not Interested');
                 }
               }}
               className="w-full text-xs font-medium bg-slate-50 border border-slate-300 rounded-md px-3 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0B3A66]"
@@ -165,10 +168,11 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
                 onChange={(e) => setInterestLevel(e.target.value)}
                 className="w-full text-xs bg-slate-50 border border-slate-300 rounded-md px-2.5 py-1.5 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0B3A66]"
               >
-                <option value="Very High">Very High</option>
-                <option value="High">High</option>
-                <option value="Moderate">Moderate</option>
-                <option value="Low">Low</option>
+                <option value="Highly Interested">Highly Interested</option>
+                <option value="Interested">Interested</option>
+                <option value="Moderately Interested">Moderately Interested</option>
+                <option value="Less Interested">Less Interested</option>
+                <option value="Not Interested">Not Interested</option>
               </select>
             </div>
           </div>
