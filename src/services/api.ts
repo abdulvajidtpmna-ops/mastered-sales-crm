@@ -298,11 +298,13 @@ export const api = {
     objection?: string;
     remark?: string;
     nextFollowUpAt?: string;
+    followUpStatus?: string;
+    FollowUpStatus?: string;
   }): Promise<ApiResponse<{ leadId: string; lead?: Lead }>> {
     return apiRequest('createlead', leadData);
   },
 
-  async updateLead(leadId: string, leadData: Partial<Lead>): Promise<ApiResponse<{ lead: Lead }>> {
+  async updateLead(leadId: string, leadData: Partial<Lead> & { followUpStatus?: string; FollowUpStatus?: string }): Promise<ApiResponse<{ lead: Lead }>> {
     return apiRequest('updatelead', { leadId, ...leadData });
   },
 
@@ -334,6 +336,8 @@ export const api = {
     objection?: string;
     remark: string;
     nextFollowUpAt?: string;
+    followUpStatus?: string;
+    FollowUpStatus?: string;
   }): Promise<ApiResponse<{ success: boolean; lead?: Lead }>> {
     return apiRequest('completefollowup', data);
   },

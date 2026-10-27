@@ -46,6 +46,8 @@ export type InterestLevel =
   | 'MODERATE'
   | 'LOW';
 
+export type FollowUpStatus = 'PENDING' | 'OVERDUE' | 'COMPLETED' | 'CANCELLED';
+
 export type PriorityTier = 'P1' | 'P2' | 'P3' | 'P4' | 'P5' | 'P1 Critical' | 'P2 High' | 'P3 Medium' | 'P4 Low' | 'P5 Minimal';
 
 export interface Lead {
@@ -68,6 +70,8 @@ export interface Lead {
   suggestedQuestion?: string;
   nextFollowUpAt?: string;
   lastContactAt?: string;
+  followUpStatus?: FollowUpStatus;
+  FollowUpStatus?: FollowUpStatus;
   assignedSalespersonId?: string;
   assignedSalespersonName?: string;
   createdAt?: string;

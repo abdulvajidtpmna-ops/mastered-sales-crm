@@ -103,6 +103,14 @@ export const LeadModal: React.FC<LeadModalProps> = ({
 
     const cleanWhatsapp = sameAsPhone ? cleanPhone : whatsapp.trim().replace(/[^0-9+]/g, '');
 
+    const isNoFollowUpRequired = status === 'Not Interested' || status === 'Admitted';
+    const cleanFollowUpAt = isNoFollowUpRequired ? '' : (nextFollowUpAt || '');
+    const computedFollowUpStatus = isNoFollowUpRequired
+      ? (status === 'Admitted' ? 'COMPLETED' : 'CANCELLED')
+      : cleanFollowUpAt && new Date(cleanFollowUpAt) < new Date()
+      ? 'OVERDUE'
+      : 'PENDING';
+
     setLoading(true);
     try {
       if (isEditing && lead) {
@@ -119,7 +127,9 @@ export const LeadModal: React.FC<LeadModalProps> = ({
           interestLevel: interestLevel as any,
           objection: objection !== 'None' ? objection : '',
           remark: remark.trim(),
-          nextFollowUpAt: nextFollowUpAt || undefined,
+          nextFollowUpAt: cleanFollowUpAt,
+          followUpStatus: computedFollowUpStatus,
+          FollowUpStatus: computedFollowUpStatus,
         });
 
         if (res.success) {
@@ -142,7 +152,9 @@ export const LeadModal: React.FC<LeadModalProps> = ({
           interestLevel,
           objection: objection !== 'None' ? objection : '',
           remark: remark.trim(),
-          nextFollowUpAt: nextFollowUpAt || undefined,
+          nextFollowUpAt: cleanFollowUpAt,
+          followUpStatus: computedFollowUpStatus,
+          FollowUpStatus: computedFollowUpStatus,
         });
 
         if (res.success) {
@@ -330,7 +342,22 @@ export const LeadModal: React.FC<LeadModalProps> = ({
               <label className="block font-semibold text-slate-700 mb-1">Status</label>
               <select
                 value={status}
-                onChange={(e) => setStatus(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setStatus(val);
+                  if (val === 'Not Interested' || val === 'Admitted') {
+                    setNextFollowUpAt('');
+                    if (val === 'Not Interested') {
+                      setInterestLevel('Not Interested');
+                      setTemperature('COLD');
+                    }
+                  } else if (!nextFollowUpAt) {
+                    const tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    tomorrow.setHours(10, 0, 0, 0);
+                    setNextFollowUpAt(tomorrow.toISOString().slice(0, 16));
+                  }
+                }}
                 className="w-full text-xs bg-slate-50 border border-slate-300 rounded-md px-2 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0B3A66]"
               >
                 <option value="New">New</option>
@@ -395,12 +422,18 @@ export const LeadModal: React.FC<LeadModalProps> = ({
 
             {/* Next Follow-up Date */}
             <div>
-              <label className="block font-semibold text-slate-700 mb-1">Next Follow-up Date & Time</label>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Next Follow-up Date & Time
+                {(status === 'Not Interested' || status === 'Admitted') && (
+                  <span className="text-slate-400 font-normal ml-1">(Not required)</span>
+                )}
+              </label>
               <input
                 type="datetime-local"
                 value={nextFollowUpAt}
+                disabled={status === 'Not Interested' || status === 'Admitted'}
                 onChange={(e) => setNextFollowUpAt(e.target.value)}
-                className="w-full text-xs bg-slate-50 border border-slate-300 rounded-md px-3 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0B3A66]"
+                className="w-full text-xs bg-slate-50 border border-slate-300 rounded-md px-3 py-2 text-slate-800 disabled:opacity-50 disabled:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0B3A66]"
               />
             </div>
           </div>

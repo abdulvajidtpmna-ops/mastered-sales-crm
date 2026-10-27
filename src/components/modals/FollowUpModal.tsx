@@ -57,6 +57,10 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
 
     setLoading(true);
     try {
+      const followUpStatus = isNoFollowUpRequired
+        ? (result === 'Admitted' ? 'COMPLETED' : 'CANCELLED')
+        : 'PENDING';
+
       const res = await api.completeFollowUp({
         leadId,
         result,
@@ -65,6 +69,8 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
         objection: objection !== 'None' ? objection : '',
         remark,
         nextFollowUpAt: isNoFollowUpRequired ? '' : nextFollowUpAt,
+        followUpStatus,
+        FollowUpStatus: followUpStatus,
       });
 
       if (res.success) {
