@@ -10,6 +10,7 @@ import {
   LogOut,
   UserCheck,
   Home,
+  Globe,
 } from 'lucide-react';
 
 export type NavItemKey =
@@ -19,6 +20,7 @@ export type NavItemKey =
   | 'followups'
   | 'sales_team'
   | 'admissions'
+  | 'forms_campaigns'
   | 'reports'
   | 'whatsapp'
   | 'performance';
@@ -41,6 +43,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const chairmanItems: { key: NavItemKey; label: string; icon: any }[] = [
     { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { key: 'leads', label: 'All Leads', icon: Users },
+    { key: 'forms_campaigns', label: 'Lead Forms & Campaigns', icon: Globe },
     { key: 'sales_team', label: 'Sales Team', icon: UserCheck },
     { key: 'followups', label: 'Follow-ups', icon: CalendarCheck },
     { key: 'admissions', label: 'Admissions', icon: GraduationCap },

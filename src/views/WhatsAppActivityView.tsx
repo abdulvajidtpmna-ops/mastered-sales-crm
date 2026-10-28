@@ -114,6 +114,22 @@ export const WhatsAppActivityView: React.FC = () => {
         </div>
       </div>
 
+      {/* Inbound WhatsApp Webhook Adapter & Architecture Info Card */}
+      <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs space-y-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 font-bold text-slate-800">
+            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span>Inbound WhatsApp Webhook Architecture (Meta Cloud API / Business Platform)</span>
+          </div>
+          <span className="px-2 py-0.5 bg-blue-100 text-[#0B3A66] rounded font-semibold text-[10px]">
+            Backend Adapter Ready
+          </span>
+        </div>
+        <p className="text-slate-600 leading-relaxed">
+          The backend Web App includes the <code className="bg-white px-1.5 py-0.5 rounded border border-slate-300 font-mono text-[11px]">handleWhatsAppWebhook_()</code> adapter. When student replies or incoming messages arrive from Meta Cloud API or an authorized WhatsApp Business Solution Provider (BSP), they are verified via verification token, mapped to the matching customer phone number, and appended to contact history without creating duplicate lead records.
+        </p>
+      </div>
+
       {/* Activity Log Table */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
         <div className="p-4 border-b border-slate-100 flex items-center justify-between">

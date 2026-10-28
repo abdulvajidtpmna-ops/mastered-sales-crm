@@ -125,7 +125,11 @@ export async function apiRequest<T = any>(
 ): Promise<ApiResponse<T>> {
   const session = getStoredSession();
   const token = session?.token;
-  const isPublicAction = action === 'login' || action === 'health';
+  const isPublicAction =
+    action === 'login' ||
+    action === 'health' ||
+    action === 'getpublicform' ||
+    action === 'publicsubmitform';
   const effectiveToken = payload.token !== undefined ? payload.token : token;
 
   // STEP 3 — INSPECT THE FIRST PROTECTED REQUEST
@@ -435,5 +439,74 @@ export const api = {
 
   async getLeadSources(): Promise<ApiResponse<string[] | { source: string; name?: string }[]>> {
     return apiRequest('getleadsources');
+  },
+
+  // Public Form Endpoints (Unauthenticated)
+  async getPublicForm(slug: string): Promise<ApiResponse<any>> {
+    return apiRequest('getpublicform', { slug });
+  },
+
+  async publicSubmitForm(data: {
+    formId?: string;
+    slug?: string;
+    name: string;
+    phone: string;
+    education?: string;
+    course?: string;
+    location?: string;
+    preferredTime?: string;
+    additionalNotes?: string;
+    utmSource?: string;
+    utmMedium?: string;
+    utmCampaign?: string;
+    utmContent?: string;
+    utmTerm?: string;
+    submissionToken?: string;
+  }): Promise<ApiResponse<{ submissionId?: string; message?: string }>> {
+    return apiRequest('publicsubmitform', data);
+  },
+
+  // Telephony & Call Outcome Tracking
+  async logCall(data: {
+    leadId: string;
+    phone: string;
+    eventType: string;
+    callResult: string;
+    remark?: string;
+    nextFollowUpAt?: string;
+  }): Promise<ApiResponse<{ callLogId: string; timestamp: string }>> {
+    return apiRequest('logcall', data);
+  },
+
+  // Chairman Lead Distribution & Settings
+  async getLeadForms(): Promise<ApiResponse<{ forms: any[] }>> {
+    return apiRequest('getleadforms');
+  },
+
+  async saveLeadForm(data: any): Promise<ApiResponse<{ formId: string; slug: string }>> {
+    return apiRequest('saveleadform', data);
+  },
+
+  async getSalespersonSettings(): Promise<ApiResponse<{ settings: any[] }>> {
+    return apiRequest('getsalespersonsettings');
+  },
+
+  async updateSalespersonSettings(data: {
+    salespersonId: string;
+    status?: string;
+    dailyLeadCap?: number;
+    maxOpenEnquiries?: number;
+    lifetimeCap?: number;
+    lifetimeCapEnabled?: boolean;
+    allocationWeight?: number;
+    leaveStartDate?: string;
+    leaveEndDate?: string;
+    leaveReason?: string;
+  }): Promise<ApiResponse<{ updated: boolean }>> {
+    return apiRequest('updatesalespersonsettings', data);
+  },
+
+  async getAssignmentHistory(enquiryId?: string): Promise<ApiResponse<{ history: any[] }>> {
+    return apiRequest('getassignmenthistory', { enquiryId });
   },
 };

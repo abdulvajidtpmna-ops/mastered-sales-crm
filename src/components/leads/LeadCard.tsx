@@ -95,7 +95,7 @@ export const LeadCard: React.FC<LeadCardProps> = ({
         className="flex items-center gap-1.5 pt-2 border-t border-slate-100"
         onClick={(e) => e.stopPropagation()}
       >
-        <CallButton phone={lead.phone} name={lead.name} size="sm" className="flex-1" />
+        <CallButton phone={lead.phone} name={lead.name} leadId={leadId} size="sm" className="flex-1" />
         <WhatsAppButton
           leadId={leadId}
           phone={lead.whatsapp || lead.phone}

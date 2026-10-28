@@ -2,20 +2,26 @@ import React, { useState } from 'react';
 import { Phone, MessageSquare, Loader2 } from 'lucide-react';
 import { api } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
+import { CallOutcomeModal } from '../modals/CallOutcomeModal';
 
 interface CallButtonProps {
   phone: string;
   name?: string;
+  leadId?: string;
   className?: string;
   size?: 'sm' | 'md' | 'lg';
+  onLogged?: () => void;
 }
 
 export const CallButton: React.FC<CallButtonProps> = ({
   phone,
   name,
+  leadId,
   className = '',
   size = 'md',
+  onLogged,
 }) => {
+  const [isOutcomeModalOpen, setIsOutcomeModalOpen] = useState(false);
   const cleanPhone = String(phone || '').replace(/[^0-9+]/g, '');
 
   const sizeClasses = {
@@ -24,21 +30,51 @@ export const CallButton: React.FC<CallButtonProps> = ({
     lg: 'px-4 py-2.5 text-sm font-semibold gap-2',
   };
 
+  const handleCallClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!cleanPhone) {
+      alert('Phone number is missing.');
+      return;
+    }
+
+    // 1. Immediately log the initial dial attempt asynchronously
+    api.logCall({
+      leadId: leadId || '',
+      phone: cleanPhone,
+      eventType: 'CALL_BUTTON_CLICKED',
+      callResult: 'CALL_ANSWERED',
+    }).catch((err) => console.warn('Could not log call button click:', err));
+
+    // 2. Open phone dialler
+    window.location.href = `tel:${cleanPhone}`;
+
+    // 3. Open rapid Call Outcome modal
+    setIsOutcomeModalOpen(true);
+  };
+
   return (
-    <a
-      href={`tel:${cleanPhone}`}
-      aria-label={`Call ${name || 'Lead'}`}
-      className={`inline-flex items-center justify-center rounded-md bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition-colors active:scale-95 ${sizeClasses[size]} ${className}`}
-      onClick={(e) => {
-        if (!cleanPhone) {
-          e.preventDefault();
-          alert('Phone number is missing.');
-        }
-      }}
-    >
-      <Phone className={size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5'} />
-      <span>Call</span>
-    </a>
+    <>
+      <button
+        type="button"
+        aria-label={`Call ${name || 'Lead'}`}
+        className={`inline-flex items-center justify-center rounded-md bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition-colors active:scale-95 cursor-pointer ${sizeClasses[size]} ${className}`}
+        onClick={handleCallClick}
+      >
+        <Phone className={size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5'} />
+        <span>Call</span>
+      </button>
+
+      {isOutcomeModalOpen && (
+        <CallOutcomeModal
+          isOpen={isOutcomeModalOpen}
+          onClose={() => setIsOutcomeModalOpen(false)}
+          leadId={leadId}
+          name={name}
+          phone={cleanPhone}
+          onSuccess={onLogged}
+        />
+      )}
+    </>
   );
 };
 

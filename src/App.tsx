@@ -15,9 +15,36 @@ import { ChairmanDashboardView } from './views/ChairmanDashboardView';
 import { SalesTeamView } from './views/SalesTeamView';
 import { ReportsView } from './views/ReportsView';
 import { WhatsAppActivityView } from './views/WhatsAppActivityView';
+import { LeadFormsView } from './views/LeadFormsView';
+import { PublicRegistrationFormView } from './views/PublicRegistrationFormView';
 import { LeadModal } from './components/modals/LeadModal';
 import { LoadingState } from './components/common/FeedbackStates';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
+
+function getPublicFormSlug(): string | null {
+  if (typeof window === 'undefined') return null;
+
+  // Check hash: #/forms/:slug or #/form/:slug
+  const hash = window.location.hash || '';
+  const hashMatch = hash.match(/^#\/forms?\/([a-zA-Z0-9_-]+)/i);
+  if (hashMatch && hashMatch[1]) return hashMatch[1];
+
+  // Check path: /forms/:slug or /form/:slug
+  const pathname = window.location.pathname || '';
+  const pathMatch = pathname.match(/^\/forms?\/([a-zA-Z0-9_-]+)/i);
+  if (pathMatch && pathMatch[1]) return pathMatch[1];
+
+  // Check query params: ?form=:slug or ?slug=:slug
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const formParam = params.get('form') || params.get('slug');
+    if (formParam) return formParam;
+  } catch (e) {
+    // Ignore error
+  }
+
+  return null;
+}
 
 const MainAppContent: React.FC = () => {
   const { isAuthenticated, isLoading, isChairman } = useAuth();
@@ -61,6 +88,8 @@ const MainAppContent: React.FC = () => {
         return <ChairmanDashboardView key={refreshKey} onNavigate={(tab) => setCurrentTab(tab as NavItemKey)} />;
       case 'leads':
         return <LeadsView key={refreshKey} />;
+      case 'forms_campaigns':
+        return <LeadFormsView key={refreshKey} />;
       case 'followups':
         return <FollowUpsView key={refreshKey} />;
       case 'admissions':
@@ -126,6 +155,28 @@ const MainAppContent: React.FC = () => {
 };
 
 export function App() {
+  const [publicSlug, setPublicSlug] = useState<string | null>(getPublicFormSlug());
+
+  useEffect(() => {
+    const handleUrlChange = () => {
+      setPublicSlug(getPublicFormSlug());
+    };
+    window.addEventListener('popstate', handleUrlChange);
+    window.addEventListener('hashchange', handleUrlChange);
+    return () => {
+      window.removeEventListener('popstate', handleUrlChange);
+      window.removeEventListener('hashchange', handleUrlChange);
+    };
+  }, []);
+
+  if (publicSlug) {
+    return (
+      <ErrorBoundary fallbackTitle="Registration Form Error">
+        <PublicRegistrationFormView slug={publicSlug} />
+      </ErrorBoundary>
+    );
+  }
+
   return (
     <ErrorBoundary fallbackTitle="Application Error">
       <ToastProvider>

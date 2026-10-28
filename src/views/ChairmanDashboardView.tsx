@@ -188,6 +188,45 @@ export const ChairmanDashboardView: React.FC<{ onNavigate?: (tab: string) => voi
         />
       </div>
 
+      {/* Lead Allocation & Campaign Distribution Executive Bar */}
+      <div className="bg-gradient-to-r from-[#0B3A66] via-[#072A4A] to-[#04192D] rounded-xl p-4 text-white shadow-sm flex flex-wrap items-center justify-between gap-4 border border-[#0B3A66]">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-[#C9A227]/20 border border-[#C9A227]/40 flex items-center justify-center text-[#E7D58A] shrink-0">
+            <Layers className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="font-bold text-sm text-white">
+                Intelligent Lead Distribution & Campaign Funnels
+              </h3>
+              <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                ACTIVE
+              </span>
+            </div>
+            <p className="text-xs text-slate-300 mt-0.5">
+              Automated load balancing with previous-counsellor exclusion on re-enquiries & live daily capacity limits.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5">
+          <button
+            type="button"
+            onClick={() => onNavigate?.('forms_campaigns')}
+            className="px-3 py-1.5 bg-[#C9A227] hover:bg-[#b08d20] text-[#072A4A] font-bold text-xs rounded-lg transition-colors cursor-pointer shadow-xs"
+          >
+            Public Forms & Meta Ads
+          </button>
+          <button
+            type="button"
+            onClick={() => onNavigate?.('sales_team')}
+            className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs rounded-lg transition-colors cursor-pointer border border-white/20"
+          >
+            Configure Team Caps
+          </button>
+        </div>
+      </div>
+
       {/* Grid: Salesperson Performance & Priority Distribution */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Salesperson Performance Table (2 Columns Span) */}

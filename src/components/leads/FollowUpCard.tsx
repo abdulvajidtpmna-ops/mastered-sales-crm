@@ -118,7 +118,7 @@ export const FollowUpCard: React.FC<FollowUpCardProps> = ({
         className="grid grid-cols-4 gap-1.5 pt-2 border-t border-slate-100"
         onClick={(e) => e.stopPropagation()}
       >
-        <CallButton phone={item.phone} name={item.name} size="sm" className="w-full justify-center" />
+        <CallButton phone={item.phone} name={item.name} leadId={leadId} size="sm" className="w-full justify-center" />
         <WhatsAppButton
           leadId={leadId}
           phone={item.whatsapp || item.phone}

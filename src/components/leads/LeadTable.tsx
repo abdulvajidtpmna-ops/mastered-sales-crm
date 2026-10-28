@@ -121,7 +121,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({
                     onClick={(e) => e.stopPropagation()}
                   >
                     <div className="inline-flex items-center gap-1.5">
-                      <CallButton phone={lead.phone} name={lead.name} size="sm" />
+                      <CallButton phone={lead.phone} name={lead.name} leadId={leadId} size="sm" />
                       <WhatsAppButton
                         leadId={leadId}
                         phone={lead.whatsapp || lead.phone}

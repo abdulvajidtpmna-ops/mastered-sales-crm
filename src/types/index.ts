@@ -213,6 +213,106 @@ export interface WhatsAppActivitySummary {
   recentActivity?: WhatsAppActivity[];
 }
 
+export type CallEventType = 'CALL_BUTTON_CLICKED' | 'CALL_ATTEMPT_RECORDED';
+
+export type CallResult =
+  | 'CALL_ANSWERED'
+  | 'CALL_NO_ANSWER'
+  | 'CALL_BUSY'
+  | 'CALL_CALLBACK_REQUESTED'
+  | 'CALL_NUMBER_INVALID';
+
+export interface CallLog {
+  callLogId?: string;
+  leadId?: string;
+  customerId?: string;
+  salespersonId?: string;
+  phone: string;
+  eventType: CallEventType;
+  callResult: CallResult;
+  remark?: string;
+  nextFollowUpAt?: string;
+  timestamp: string;
+}
+
+export type HighestEducation =
+  | 'SSLC / 10th'
+  | 'Plus Two / Higher Secondary'
+  | 'ITI'
+  | 'Diploma'
+  | 'Undergraduate degree'
+  | 'Postgraduate degree'
+  | 'Professional qualification'
+  | 'Other';
+
+export interface LeadForm {
+  formId: string;
+  slug: string;
+  title: string;
+  description?: string;
+  defaultCourse?: string;
+  campaignName?: string;
+  leadSource?: string;
+  status: 'ACTIVE' | 'PAUSED' | 'INACTIVE';
+  createdAt: string;
+  expiresAt?: string;
+  confirmationMessage?: string;
+  privacyNotice?: string;
+  submissionCount?: number;
+}
+
+export interface FormSubmission {
+  submissionId: string;
+  formId: string;
+  customerId?: string;
+  enquiryId?: string;
+  submittedAt: string;
+  normalizedPhone: string;
+  submissionStatus: string;
+  campaignName?: string;
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  utmContent?: string;
+  utmTerm?: string;
+  highestEducation?: string;
+  preferredTime?: string;
+  additionalNotes?: string;
+}
+
+export interface SalespersonSettings {
+  salespersonId: string;
+  name: string;
+  email: string;
+  status: 'ACTIVE' | 'ON_LEAVE' | 'PAUSED' | 'INACTIVE';
+  dailyLeadCap: number;
+  maxOpenEnquiries: number;
+  lifetimeCap: number;
+  lifetimeCapEnabled: boolean;
+  allocationWeight: number;
+  leaveStartDate?: string;
+  leaveEndDate?: string;
+  leaveReason?: string;
+  pausedAt?: string;
+  todayAssignments?: number;
+  openEnquiries?: number;
+  lifetimeAssignments?: number;
+}
+
+export interface AssignmentHistoryItem {
+  assignmentId: string;
+  enquiryId: string;
+  customerId?: string;
+  previousSalespersonId?: string;
+  newSalespersonId: string;
+  assignmentType: string;
+  assignmentReason: string;
+  assignedAt: string;
+  assignedBy?: string;
+  overrideFlag?: boolean | string;
+  status?: string;
+}
+
 export interface ApiResponse<T = any> {
   success: boolean;
   data?: T;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { Lead, FollowUpHistoryItem, CourseTransfer } from '../../types';
+import type { Lead, FollowUpHistoryItem, CourseTransfer, AssignmentHistoryItem } from '../../types';
 import { api } from '../../services/api';
 import { TemperatureBadge, PriorityBadge, StatusBadge, InterestBadge, CourseBadge } from '../common/Badges';
 import { CallButton, WhatsAppButton } from '../common/Buttons';
@@ -17,6 +17,7 @@ import {
   CheckSquare,
   CalendarClock,
   Loader2,
+  UserCheck,
 } from 'lucide-react';
 
 interface LeadDetailModalProps {
@@ -45,6 +46,7 @@ export const LeadDetailModal: React.FC<LeadDetailModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState<FollowUpHistoryItem[]>([]);
   const [transfers, setTransfers] = useState<CourseTransfer[]>([]);
+  const [assignments, setAssignments] = useState<AssignmentHistoryItem[]>([]);
 
   const leadId = lead?.id || lead?.leadId || '';
 
@@ -54,8 +56,9 @@ export const LeadDetailModal: React.FC<LeadDetailModalProps> = ({
       Promise.all([
         api.getLead(leadId).catch(() => ({ success: false, data: null })),
         api.getCourseTransferHistory(leadId).catch(() => ({ success: false, data: [] })),
+        api.getAssignmentHistory(leadId).catch(() => ({ success: false, data: [] })),
       ])
-        .then(([leadRes, transferRes]) => {
+        .then(([leadRes, transferRes, assignRes]) => {
           if (leadRes.success && leadRes.data?.history) {
             setHistory(leadRes.data.history);
           } else {
@@ -66,6 +69,15 @@ export const LeadDetailModal: React.FC<LeadDetailModalProps> = ({
             setTransfers(transferRes.data);
           } else {
             setTransfers([]);
+          }
+
+          if (assignRes.success && assignRes.data) {
+            const rawAssign = Array.isArray(assignRes.data)
+              ? assignRes.data
+              : (assignRes.data as any)?.history || [];
+            setAssignments(rawAssign);
+          } else {
+            setAssignments([]);
           }
         })
         .finally(() => setLoading(false));
@@ -116,7 +128,7 @@ export const LeadDetailModal: React.FC<LeadDetailModalProps> = ({
         {/* Action Bar */}
         <div className="bg-slate-50 border-b border-slate-200 px-6 py-2.5 flex flex-wrap items-center justify-between gap-2 shrink-0">
           <div className="flex items-center gap-2">
-            <CallButton phone={lead.phone} name={lead.name} size="sm" />
+            <CallButton phone={lead.phone} name={lead.name} leadId={leadId} size="sm" />
             <WhatsAppButton
               leadId={leadId}
               phone={lead.whatsapp || lead.phone}
@@ -361,6 +373,43 @@ export const LeadDetailModal: React.FC<LeadDetailModalProps> = ({
                     <div className="text-right text-[11px] text-slate-400">
                       <div>{t.changedByName || t.changedBy}</div>
                       <div>{new Date(t.changedAt).toLocaleDateString()}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Section 5b: Counsellor Assignment & Ownership History (if any) */}
+          {assignments.length > 0 && (
+            <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
+              <h4 className="font-bold text-slate-800 uppercase tracking-wider text-[11px] mb-2.5 flex items-center gap-1.5">
+                <UserCheck className="w-3.5 h-3.5 text-[#0B3A66]" />
+                Ownership & Assignment History
+              </h4>
+              <div className="space-y-2">
+                {assignments.map((a, idx) => (
+                  <div
+                    key={a.assignmentId || idx}
+                    className="bg-white p-2.5 rounded border border-slate-200 text-xs flex items-start justify-between gap-2"
+                  >
+                    <div>
+                      <div className="flex items-center gap-2 font-semibold text-slate-800">
+                        <span className="px-1.5 py-0.5 bg-slate-100 rounded text-slate-700">
+                          {a.previousSalespersonId ? `Prev: ${a.previousSalespersonId}` : 'Initial Allocation'}
+                        </span>
+                        <span>→</span>
+                        <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-900 rounded font-bold">
+                          Assigned: {a.newSalespersonId}
+                        </span>
+                      </div>
+                      <p className="text-slate-600 text-[11px] mt-1">
+                        <strong>Reason:</strong> {a.assignmentReason || a.assignmentType}
+                      </p>
+                    </div>
+                    <div className="text-right text-[11px] text-slate-400">
+                      <div>{a.assignedBy || 'Allocation Engine'}</div>
+                      <div>{new Date(a.assignedAt).toLocaleDateString()}</div>
                     </div>
                   </div>
                 ))}
