@@ -886,3 +886,114 @@ function getAssignmentHistory_(payload) {
     return errorResponse_(err.message);
   }
 }
+
+/**
+ * =========================================================
+ * CORE GOOGLE SHEETS & RESPONSE HELPER UTILITIES
+ * =========================================================
+ */
+
+function getSheetData_(sheetName) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(sheetName);
+  if (!sheet) return [];
+  const data = sheet.getDataRange().getValues();
+  if (data.length <= 1) return [];
+  const headers = data[0];
+  const rows = [];
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const obj = {};
+    for (let j = 0; j < headers.length; j++) {
+      obj[headers[j]] = row[j];
+    }
+    obj._rowIndex = i + 1;
+    rows.push(obj);
+  }
+  return rows;
+}
+
+function appendRow_(sheetName, record) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(sheetName);
+  if (!sheet) throw new Error('Sheet ' + sheetName + ' not found.');
+  const lastCol = Math.max(1, sheet.getLastColumn());
+  const headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+  const rowValues = headers.map(h => record[h] !== undefined ? record[h] : '');
+  sheet.appendRow(rowValues);
+}
+
+function updateRowByValue_(sheetName, keyField, keyValue, updateObj) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(sheetName);
+  if (!sheet) throw new Error('Sheet ' + sheetName + ' not found.');
+  const data = sheet.getDataRange().getValues();
+  if (data.length <= 1) return false;
+  const headers = data[0];
+  const keyIdx = headers.indexOf(keyField);
+  if (keyIdx === -1) return false;
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][keyIdx]) === String(keyValue)) {
+      for (const prop in updateObj) {
+        const colIdx = headers.indexOf(prop);
+        if (colIdx !== -1) {
+          sheet.getRange(i + 1, colIdx + 1).setValue(updateObj[prop]);
+        }
+      }
+      return true;
+    }
+  }
+  return false;
+}
+
+function successResponse_(data) {
+  return ContentService.createTextOutput(JSON.stringify({
+    success: true,
+    data: data
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+
+function errorResponse_(message) {
+  return ContentService.createTextOutput(JSON.stringify({
+    success: false,
+    message: String(message)
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * Enhanced Router Integration Helper
+ * Can be called from routeRequest_ in Code.gs
+ */
+function handleEnhancedCRMRouting_(action, payload) {
+  const normAction = String(action || '').toLowerCase().trim();
+
+  // 1. Public Endpoints (No token required)
+  if (normAction === 'getpublicform') {
+    return getPublicForm_(payload);
+  }
+  if (normAction === 'publicsubmitform') {
+    return publicSubmitForm_(payload);
+  }
+
+  // 2. Authenticated Endpoints (Token checked by caller)
+  if (normAction === 'logcall') {
+    return logCall_(payload);
+  }
+  if (normAction === 'getleadforms') {
+    return getLeadForms_(payload);
+  }
+  if (normAction === 'saveleadform') {
+    return saveLeadForm_(payload);
+  }
+  if (normAction === 'getsalespersonsettings') {
+    return getSalespersonSettings_(payload);
+  }
+  if (normAction === 'updatesalespersonsettings') {
+    return updateSalespersonSettings_(payload);
+  }
+  if (normAction === 'getassignmenthistory') {
+    return getAssignmentHistory_(payload);
+  }
+
+  return null;
+}
